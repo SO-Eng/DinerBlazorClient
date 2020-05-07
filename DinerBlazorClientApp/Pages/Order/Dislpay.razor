@@ -54,7 +54,7 @@ else
             </tr>*@
         </tbody>
     </table>
-    @*<EditForm Model="@updateModel" OnValidSubmit="HandleValidSubmit">
+    <EditForm Model="@updateModel" OnValidSubmit="HandleValidSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary Model="@updateModel" />
         <div class="form-group">
@@ -65,7 +65,7 @@ else
         <div class="form-group">
             <input type="submit" value="Update Orderer Name" class="btn btn-primary"/>
         </div>
-    </EditForm>*@
+    </EditForm>
 }
 
 
@@ -75,6 +75,7 @@ else
     public int Id { get; set; }
 
     private OrderResultModel orderInfo = new OrderResultModel();
+    private OrderUpdateModel updateModel = new OrderUpdateModel();
     private string errorString;
 
     protected override async Task OnInitializedAsync()
@@ -84,10 +85,26 @@ else
         if (response.IsSuccessStatusCode)
         {
             orderInfo = await response.Content.ReadFromJsonAsync<OrderResultModel>();
+            updateModel.Id = orderInfo.Order.Id;
+            updateModel.OrderName = orderInfo.Order.OrderName;
         }
         else
         {
             errorString = response.ReasonPhrase;
         }
     }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            HttpResponseMessage response = await Http.PutAsJsonAsync("api/order", updateModel);
+            orderInfo.Order.OrderName = updateModel.OrderName;
+        }
+        catch (Exception ex)
+        {
+            errorString = ex.Message;
+        }
+    }
+
 }
