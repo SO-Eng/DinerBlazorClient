@@ -17,7 +17,9 @@ namespace DinerBlazorClientApp
             {
                 // TODO: Change this to correct address!
                 //BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
-                BaseAddress = new Uri("https://localhost:44379")
+                //BaseAddress = new Uri("https://localhost:44379")
+                BaseAddress = new Uri("https://dinerapi.softwort-developement.com/")
+
             });
 
             await builder.Build().RunAsync();
